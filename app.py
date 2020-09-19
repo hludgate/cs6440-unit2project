@@ -31,16 +31,22 @@ df['SP_STRKETIA'] = df['SP_STRKETIA'] -1
 
 df_states = []
 df_states_info = pd.DataFrame(columns=['State','Average_Chronic','Alzheimers','Osteoporosis','Chronic Kidney Disease',
-                                       'Heart Failure','Cancer','COPD','Diabetes','Ischemic Heart Disease','Arthritis','Stroke'])
+                                       'Heart Failure','Cancer','COPD','Diabetes','Ischemic Heart Disease','Arthritis','Stroke','Most Common Illness'])
+chronics = ['Alzheimers','Osteoporosis','Chronic Kidney Disease',
+                                       'Heart Failure','Cancer','COPD','Diabetes','Ischemic Heart Disease','Arthritis','Stroke']
 i = 0
 for state in dt:
     df_state = df[df['SP_STATE_CODE']==dt[state][0]]
     df_state['chronic_sum'] = df_state['SP_ALZHDMTA'] + df_state['SP_OSTEOPRS'] + df_state['SP_CHRNKIDN'] +df_state['SP_CHF'] + \
     df_state['SP_CNCR'] + df_state['SP_COPD'] + df_state['SP_DIABETES']+ df_state['SP_ISCHMCHT']+ df_state['SP_RA_OA'] + \
     df_state['SP_STRKETIA']
-    df_states_info.loc[i]=[state,df_state['chronic_sum'].mean(),df_state['SP_ALZHDMTA'].sum(),df_state['SP_OSTEOPRS'].sum(),df_state['SP_CHRNKIDN'].sum(),
+    chronic_tots = [df_state['SP_ALZHDMTA'].sum(),df_state['SP_OSTEOPRS'].sum(),df_state['SP_CHRNKIDN'].sum(),
                        df_state['SP_CHF'].sum(),df_state['SP_CNCR'].sum(),df_state['SP_COPD'].sum(), df_state['SP_DIABETES'].sum(),
                        df_state['SP_ISCHMCHT'].sum(),df_state['SP_RA_OA'].sum(),df_state['SP_STRKETIA'].sum()]
+    
+    df_states_info.loc[i]=[state,df_state['chronic_sum'].mean(),df_state['SP_ALZHDMTA'].sum(),df_state['SP_OSTEOPRS'].sum(),df_state['SP_CHRNKIDN'].sum(),
+                       df_state['SP_CHF'].sum(),df_state['SP_CNCR'].sum(),df_state['SP_COPD'].sum(), df_state['SP_DIABETES'].sum(),
+                       df_state['SP_ISCHMCHT'].sum(),df_state['SP_RA_OA'].sum(),df_state['SP_STRKETIA'].sum(),chronics[chronic_tots.index(max(chronic_tots))]]
     i += 1
 df_sex = []
 df_sex_info = pd.DataFrame(columns=['Sex','Average_Chronic','Alzheimers','Osteoporosis','Chronic Kidney Disease',
@@ -82,12 +88,16 @@ for i in range(5):
     temp_tots = [df_eth['SP_ALZHDMTA'].sum()/num,df_eth['SP_OSTEOPRS'].sum()/num,df_eth['SP_CHRNKIDN'].sum()/num,
                        df_eth['SP_CHF'].sum()/num,df_eth['SP_CNCR'].sum()/num,df_eth['SP_COPD'].sum()/num, df_eth['SP_DIABETES'].sum()/num,
                        df_eth['SP_ISCHMCHT'].sum()/num,df_eth['SP_RA_OA'].sum()/num,df_eth['SP_STRKETIA'].sum()/num]
-    eth_totals.append(temp_tots)     
+    eth_totals.append(temp_tots)   
+    
+df['text'] = df_states_info['State'] + '<br>' + \
+    'Most Common Illness ' + df_states_info['Most Common Illness'] 
 fig = go.Figure(data=go.Choropleth(
     locations=df_states_info['State'], # Spatial coordinates
     z = df_states_info['Average_Chronic'].astype(float), # Data to be color-coded
     locationmode = 'USA-states', # set of locations match entries in `locations`
     colorscale = 'Reds',
+    text=df['text'], # hover text
     colorbar_title = "Average Chronic Illnesses",
 ))
 
