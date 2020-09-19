@@ -90,14 +90,14 @@ for i in range(5):
                        df_eth['SP_ISCHMCHT'].sum()/num,df_eth['SP_RA_OA'].sum()/num,df_eth['SP_STRKETIA'].sum()/num]
     eth_totals.append(temp_tots)   
     
-df['text'] = df_states_info['State'] + '<br>' + \
+df_states_info['text'] = df_states_info['State'] + '<br>' + \
     'Most Common Illness ' + df_states_info['Most Common Illness'] 
 fig = go.Figure(data=go.Choropleth(
     locations=df_states_info['State'], # Spatial coordinates
     z = df_states_info['Average_Chronic'].astype(float), # Data to be color-coded
     locationmode = 'USA-states', # set of locations match entries in `locations`
     colorscale = 'Reds',
-    text=df['text'], # hover text
+    text=df_states_info['text'], # hover text
     colorbar_title = "Average Chronic Illnesses",
 ))
 
