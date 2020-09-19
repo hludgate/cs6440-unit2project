@@ -11,11 +11,11 @@ app = dash.Dash(__name__)
 
 server = app.server
 
-excel = 'https://github.com/hludgate/cs6440-unit2project/blob/master/plotly_small.xlsx'
-state_code = 'https://github.com/hludgate/cs6440-unit2project/blob/master/state_codes.xlsx'
-dt = pd.read_excel(state_code)
+excel = 'https://raw.githubusercontent.com/hludgate/cs6440-unit2project/master/plotly_small.csv'
+state_code = 'https://raw.githubusercontent.com/hludgate/cs6440-unit2project/master/state_codes.csv'
+dt = pd.read_csv(state_code)
 dt = dt.set_index('State').T.to_dict('list')
-df = pd.read_excel(excel)
+df = pd.read_csv(excel)
 
 df = df[df['SP_DEPRESSN'] > 1]
 df['SP_ALZHDMTA'] = df['SP_ALZHDMTA'] -1
