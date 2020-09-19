@@ -11,7 +11,7 @@ app = dash.Dash(__name__)
 
 server = app.server
 
-excel = 'https://raw.githubusercontent.com/hludgate/cs6440-unit2project/master/plotly_small.csv'
+excel = 'https://raw.githubusercontent.com/hludgate/cs6440-unit2project/master/plotly.csv'
 state_code = 'https://raw.githubusercontent.com/hludgate/cs6440-unit2project/master/state_codes.csv'
 dt = pd.read_csv(state_code)
 dt = dt.set_index('State').T.to_dict('list')
