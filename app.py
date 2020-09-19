@@ -90,8 +90,7 @@ for i in range(5):
                        df_eth['SP_ISCHMCHT'].sum()/num,df_eth['SP_RA_OA'].sum()/num,df_eth['SP_STRKETIA'].sum()/num]
     eth_totals.append(temp_tots)   
     
-df_states_info['text'] = df_states_info['State'] + '<br>' + \
-    'Most Common Illness ' + df_states_info['Most Common Illness'] 
+df_states_info['text'] = 'Most Common Illness: ' + df_states_info['Most Common Illness'] 
 fig = go.Figure(data=go.Choropleth(
     locations=df_states_info['State'], # Spatial coordinates
     z = df_states_info['Average_Chronic'].astype(float), # Data to be color-coded
@@ -107,19 +106,19 @@ fig.update_layout(
 )
     
 fig2 = go.Figure(data=[
-    go.Bar(name=ethns[0], x=chronics, y=eth_totals[0]),
-    go.Bar(name=ethns[1], x=chronics, y=eth_totals[1]),
-    go.Bar(name=ethns[2], x=chronics, y=eth_totals[2]),
-    go.Bar(name=ethns[4], x=chronics, y=eth_totals[4])    
+    go.Bar(name=ethns[0], x=chronics, y=eth_totals[0]*100),
+    go.Bar(name=ethns[1], x=chronics, y=eth_totals[1]*100),
+    go.Bar(name=ethns[2], x=chronics, y=eth_totals[2]*100),
+    go.Bar(name=ethns[4], x=chronics, y=eth_totals[4]*100)
 ])
 # Change the bar mode
-fig2.update_layout(barmode='group')
+fig2.update_layout(barmode='group',title_text = '2008 US Probability of Chronic Illnesses of Patients with Depression by Ethnicity')
 fig3 = go.Figure(data=[
-    go.Bar(name=sex[0], x=chronics, y=sex_totals[0]),
-    go.Bar(name=sex[1], x=chronics, y=sex_totals[1])   
+    go.Bar(name=sex[0], x=chronics, y=sex_totals[0]*100),
+    go.Bar(name=sex[1], x=chronics, y=sex_totals[1]*100)   
 ])
 # Change the bar mode
-fig3.update_layout(barmode='group')
+fig3.update_layout(barmode='group',title_text = '2008 US Probability of Chronic Illnesses of Patients with Depression by Gender')
 app.layout = html.Div([
     dcc.Graph(figure=fig),
     dcc.Graph(figure=fig2),
