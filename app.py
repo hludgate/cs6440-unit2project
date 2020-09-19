@@ -5,14 +5,14 @@ import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
 import plotly.graph_objects as go
-
+import xlrd
 
 app = dash.Dash(__name__)
 
 server = app.server
 
-excel = 'https://github.com/hludgate/cs6440-unit2project/plotly_small.xlsx'
-state_code = 'https://github.com/hludgate/cs6440-unit2project/state_codes.xlsx'
+excel = 'https://github.com/hludgate/cs6440-unit2project/blob/master/plotly_small.xlsx'
+state_code = 'https://github.com/hludgate/cs6440-unit2project/blob/master/state_codes.xlsx'
 dt = pd.read_excel(state_code)
 dt = dt.set_index('State').T.to_dict('list')
 df = pd.read_excel(excel)
