@@ -120,6 +120,8 @@ fig3 = go.Figure(data=[
 # Change the bar mode
 fig3.update_layout(barmode='group',title_text = '2008 US Probability of Chronic Illnesses of Patients with Depression by Gender')
 app.layout = html.Div([
+    html.H2("Mini Project #2"),
+    html.H3("Henry Ludgate"),
     dcc.Graph(figure=fig),
     dcc.Graph(figure=fig2),
     dcc.Graph(figure=fig3)
