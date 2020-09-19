@@ -6,7 +6,7 @@ import dash_html_components as html
 import pandas as pd
 import plotly.graph_objects as go
 import xlrd
-
+import plotly.express as px
 app = dash.Dash(__name__)
 
 server = app.server
@@ -42,7 +42,47 @@ for state in dt:
                        df_state['SP_CHF'].sum(),df_state['SP_CNCR'].sum(),df_state['SP_COPD'].sum(), df_state['SP_DIABETES'].sum(),
                        df_state['SP_ISCHMCHT'].sum(),df_state['SP_RA_OA'].sum(),df_state['SP_STRKETIA'].sum()]
     i += 1
-     
+df_sex = []
+df_sex_info = pd.DataFrame(columns=['Sex','Average_Chronic','Alzheimers','Osteoporosis','Chronic Kidney Disease',
+                                       'Heart Failure','Cancer','COPD','Diabetes','Ischemic Heart Disease','Arthritis','Stroke'])
+chronics = ['Alzheimers','Osteoporosis','Chronic Kidney Disease',
+                                       'Heart Failure','Cancer','COPD','Diabetes','Ischemic Heart Disease','Arthritis','Stroke']
+sex = ['Male','Female']
+sex_totals = []
+for i in range(2):
+    df_sex = df[df['BENE_SEX_IDENT_CD']==i+1]
+    num = len(df_sex.index)
+    df_sex['chronic_sum'] = df_sex['SP_ALZHDMTA'] + df_sex['SP_OSTEOPRS'] + df_sex['SP_CHRNKIDN'] +df_sex['SP_CHF'] + \
+    df_sex['SP_CNCR'] + df_sex['SP_COPD'] + df_sex['SP_DIABETES']+ df_sex['SP_ISCHMCHT']+ df_sex['SP_RA_OA'] + \
+    df_sex['SP_STRKETIA']
+    df_sex_info.loc[i]=[i,df_sex['chronic_sum'].mean(),df_sex['SP_ALZHDMTA'].sum(),df_sex['SP_OSTEOPRS'].sum(),df_sex['SP_CHRNKIDN'].sum(),
+                       df_sex['SP_CHF'].sum(),df_sex['SP_CNCR'].sum(),df_sex['SP_COPD'].sum(), df_sex['SP_DIABETES'].sum(),
+                       df_sex['SP_ISCHMCHT'].sum(),df_sex['SP_RA_OA'].sum(),df_sex['SP_STRKETIA'].sum()]
+    temp_tots = [df_sex['SP_ALZHDMTA'].sum()/num,df_sex['SP_OSTEOPRS'].sum()/num,df_sex['SP_CHRNKIDN'].sum()/num,
+                   df_sex['SP_CHF'].sum()/num,df_sex['SP_CNCR'].sum()/num,df_sex['SP_COPD'].sum()/num, df_sex['SP_DIABETES'].sum()/num,
+                   df_sex['SP_ISCHMCHT'].sum()/num,df_sex['SP_RA_OA'].sum()/num,df_sex['SP_STRKETIA'].sum()/num]
+    sex_totals.append(temp_tots)
+    
+df_eth = []
+df_eth_info = pd.DataFrame(columns=['Ethnicity','Average_Chronic','Alzheimers','Osteoporosis','Chronic Kidney Disease',
+                                       'Heart Failure','Cancer','COPD','Diabetes','Ischemic Heart Disease','Arthritis','Stroke'])
+chronics = ['Alzheimers','Osteoporosis','Chronic Kidney Disease',
+                                       'Heart Failure','Cancer','COPD','Diabetes','Ischemic Heart Disease','Arthritis','Stroke']
+ethns = ['White','Black','Other','NA','Hispanic']
+eth_totals = []
+for i in range(5):
+    df_eth = df[df['BENE_RACE_CD']==i+1]
+    num = len(df_eth.index)
+    df_eth['chronic_sum'] = df_eth['SP_ALZHDMTA'] + df_eth['SP_OSTEOPRS'] + df_eth['SP_CHRNKIDN'] +df_eth['SP_CHF'] + \
+    df_eth['SP_CNCR'] + df_eth['SP_COPD'] + df_eth['SP_DIABETES']+ df_eth['SP_ISCHMCHT']+ df_eth['SP_RA_OA'] + \
+    df_eth['SP_STRKETIA']
+    df_eth_info.loc[i]=[i,df_eth['chronic_sum'].mean(),df_eth['SP_ALZHDMTA'].sum(),df_eth['SP_OSTEOPRS'].sum(),df_eth['SP_CHRNKIDN'].sum(),
+                       df_eth['SP_CHF'].sum(),df_eth['SP_CNCR'].sum(),df_eth['SP_COPD'].sum(), df_eth['SP_DIABETES'].sum(),
+                       df_eth['SP_ISCHMCHT'].sum(),df_eth['SP_RA_OA'].sum(),df_eth['SP_STRKETIA'].sum()]
+    temp_tots = [df_eth['SP_ALZHDMTA'].sum()/num,df_eth['SP_OSTEOPRS'].sum()/num,df_eth['SP_CHRNKIDN'].sum()/num,
+                       df_eth['SP_CHF'].sum()/num,df_eth['SP_CNCR'].sum()/num,df_eth['SP_COPD'].sum()/num, df_eth['SP_DIABETES'].sum()/num,
+                       df_eth['SP_ISCHMCHT'].sum()/num,df_eth['SP_RA_OA'].sum()/num,df_eth['SP_STRKETIA'].sum()/num]
+    eth_totals.append(temp_tots)     
 fig = go.Figure(data=go.Choropleth(
     locations=df_states_info['State'], # Spatial coordinates
     z = df_states_info['Average_Chronic'].astype(float), # Data to be color-coded
@@ -56,9 +96,24 @@ fig.update_layout(
     geo_scope='usa', # limite map scope to USA
 )
     
-
+fig2 = go.Figure(data=[
+    go.Bar(name=ethns[0], x=chronics, y=eth_totals[0]),
+    go.Bar(name=ethns[1], x=chronics, y=eth_totals[1]),
+    go.Bar(name=ethns[2], x=chronics, y=eth_totals[2]),
+    go.Bar(name=ethns[4], x=chronics, y=eth_totals[4])    
+])
+# Change the bar mode
+fig2.update_layout(barmode='group')
+fig3 = go.Figure(data=[
+    go.Bar(name=sex[0], x=chronics, y=sex_totals[0]),
+    go.Bar(name=sex[1], x=chronics, y=sex_totals[1])   
+])
+# Change the bar mode
+fig3.update_layout(barmode='group')
 app.layout = html.Div([
-    dcc.Graph(figure=fig)
+    dcc.Graph(figure=fig),
+    dcc.Graph(figure=fig2),
+    dcc.Graph(figure=fig3)
 ])
 
 #@app.callback(dash.dependencies.Output('display-value', 'children'),
