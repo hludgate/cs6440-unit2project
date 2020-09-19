@@ -6,14 +6,13 @@ import dash_html_components as html
 import pandas as pd
 import plotly.graph_objects as go
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__)
 
 server = app.server
 
-excel = 'plotly_small.xlsx'
-state_code = 'state_codes.xlsx'
+excel = 'cs6440-unit2project/plotly_small.xlsx'
+state_code = 'cs6440-unit2project/state_codes.xlsx'
 dt = pd.read_excel(state_code)
 dt = dt.set_index('State').T.to_dict('list')
 df = pd.read_excel(excel)
