@@ -11,8 +11,8 @@ app = dash.Dash(__name__)
 
 server = app.server
 
-excel = 'cs6440-unit2project/plotly_small.xlsx'
-state_code = 'cs6440-unit2project/state_codes.xlsx'
+excel = 'https://github.com/hludgate/cs6440-unit2project/plotly_small.xlsx'
+state_code = 'https://github.com/hludgate/cs6440-unit2project/state_codes.xlsx'
 dt = pd.read_excel(state_code)
 dt = dt.set_index('State').T.to_dict('list')
 df = pd.read_excel(excel)
